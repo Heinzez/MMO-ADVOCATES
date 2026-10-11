@@ -9,7 +9,7 @@ Laravel with React/Inertia for interactive application modules; server-rendered 
 
 The earlier public-website-first tiering is superseded for the current engineering task: the user explicitly assigned backend implementation for database/migrations, authentication/reset, server authorization, roles, cases, follow-ups, dashboard data, user management, audit logging, integration and automated tests. The supplied PRD remains the V1 requirements source. Booking and client accounts/portal remain out of scope.
 
-React/Inertia is selected for the product direction, not a requirement to install or maintain unused portal screens in the public-only edition. Public pages can initially use Blade with lightweight interactions. Add Inertia/React when a funded interactive module needs it, or establish only a minimal verified integration during approved foundation work. Decide that timing explicitly before bootstrap.
+React/Inertia is part of the staff-application direction authorized for this backend task; public pages remain Blade-rendered. Use one Laravel application and avoid a separate frontend service. The current machine lacks host PHP/Composer, so the verified local development route is the approved Composer/PHP container rather than silently switching stacks.
 
 ## Livewire versus React/Inertia for MMO
 

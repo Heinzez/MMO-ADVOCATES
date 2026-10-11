@@ -8,13 +8,15 @@
 - Git root: `C:\Users\AMREF\Projects\codex-test`; current branch: `main`; no commits yet. `git status --short --branch` reports `?? "MMO Advocates WEBAPP/"`.
 - Project folder contains the PRD, `LOGO MMO.docx`, and Markdown planning/scaffold documents. `LOGO MMO.docx` contains embedded EMF artwork; a reviewed web export is still required.
 - **Selected technology direction:** Laravel with React/Inertia for interactive staff pages, Blade for public pages, Tailwind visual system. TypeScript is a recommended frontend default. Exact Laravel/PHP versions and the database engine are not pinned. MySQL is recommended, subject to HostAfrica verification. No dependency manifest exists yet.
-- **Local tools:** Python 3.11.9, Node.js 24.13.0 and npm 11.21.0 are present. PHP, Composer, MySQL CLI and MariaDB CLI are absent from PATH. Docker CLI 29.1.3 is installed; normal-sandbox Docker engine access was denied, while elevated `docker info` succeeded. WSL access is denied. The selected Laravel project cannot run in the ordinary local shell until its PHP/Composer environment is made available.
+- **Local tools:** Python 3.11.9, Node.js 24.13.0 and npm 11.21.0 are present. Host PHP, Composer, MySQL CLI and MariaDB CLI are absent from PATH. Docker CLI 29.1.3 is installed; normal-sandbox engine access is denied. With approved elevation, the official Composer 2.10.3 container ran successfully and reported PHP 8.5.11. WSL access is denied. Containerized PHP is available for project setup; there is still no application to run.
 - **Application entry point: none.** There are no source files, route handlers, executable scripts, or app configuration.
 - **Run/test commands: none.** There are no manifests/scripts or test files from which valid commands can be given. The application cannot currently be run or tested.
 - **Architecture: selected direction, not implemented.** The stack decision specifies a single Laravel application with Blade public pages and React/Inertia staff pages; no executable application architecture exists yet.
 - **Database: MySQL recommended but hosting fit not confirmed.** No schema, migration, seed, or database configuration exists.
 - **Project instructions:** no `AGENTS.md`, `CLAUDE.md`, or contributor instructions were found in the inspected repository.
 - **Tests and CI:** absent. No tests were run; there is no application implementation to verify.
+
+Laravel 13 is the implementation target: its official release notes list PHP 8.3–8.5 support, and the available Composer container runs PHP 8.5.11. React/Inertia is to be installed using Laravel's official React starter kit, then registration disabled because the PRD forbids visitor/client accounts. Exact dependency versions will be pinned in the generated Composer/npm lockfiles.
 
 The Git repository is the parent folder. The complete application folder remains untracked and there are no commits, so the current files are not yet captured in repository history.
 
