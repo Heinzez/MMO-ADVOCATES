@@ -191,6 +191,38 @@ The bootstrap will be verified against the following pass/fail criteria:
 
 ## 8. Remaining Blockers Before Coding Dispatch
 
-1. **ENV-01 Decision:** Confirm whether the user prefers containerized Docker PHP 8.3 execution (zero host install, ready right now) or manual installation of native Windows PHP 8.3 onto system PATH.
-2. **HOST-01:** Firm account owner confirmation of the purchased HostAfrica package name and whether SSH is enabled out of the box.
-3. **REQ-01:** Confirmation of partner qualification mapping and official vector logo export from `LOGO MMO.docx`.
+This list predates BOOT-01. ENV-01 is resolved with the project-local Docker PHP/Composer runtime. Remaining pre-release inputs are:
+
+1. **HOST-01:** Firm account owner confirmation of the purchased HostAfrica package name and whether SSH is enabled out of the box.
+2. **REQ-01:** Confirmation of partner qualification mapping and official vector logo export from `LOGO MMO.docx`.
+
+---
+
+## 9. BOOT-01 Execution Report (12 October 2026)
+
+The earlier proposed scaffold sequence above is superseded. Inspection found the existing Laravel 13 React starter already in `backend/`; it was preserved and extended in place. The official starter conventions and dependency manifests remain authoritative.
+
+### Verified results
+
+| Check | Actual command/result |
+|---|---|
+| PHP/Composer runtime | `docker compose exec -T app php artisan --version` → Laravel Framework 13.35.0; `composer --version` → Composer 2.10.3; `php -v` → PHP 8.5.11. |
+| Required PHP extensions | `docker compose exec -T app php -m` confirmed `pdo_mysql`, `pdo_sqlite`, `mbstring`, `curl`, `dom`, `fileinfo`, `openssl`, `tokenizer`, `xml`, `zip`, and `pcntl` (plus core extensions). |
+| Dependency reproducibility | `docker compose run --rm app composer install --no-interaction --prefer-dist` completed from `composer.lock`; `npm ci --no-audit --no-fund` completed with 242 packages from `package-lock.json`. |
+| Database | MySQL 8.4.11 reported by `docker compose exec -T db mysql --version`; `docker compose run --rm app php artisan migrate --force` applied all migrations successfully. |
+| Tests | `docker compose run --rm app php artisan test` → 48 passed, 173 assertions. Tests use SQLite memory and synthetic factories. |
+| Frontend | `npm run build` (the starter's original `vp build` script) → exit 0; production manifest, CSS, JavaScript and font files were written under `backend/public/build/`. |
+| HTTP | `docker compose up -d app` succeeded. Windows host requests to `http://127.0.0.1:8000/up` and `/` both returned 200; the home page referenced compiled `/build/assets/`. |
+
+### Failures found and resolved
+
+- First npm registry requests returned `ENOTFOUND`; retries later succeeded. `npm ci` then completed cleanly from the generated lockfile.
+- On first MySQL initialization, the healthcheck retry window expired while MySQL was still initializing. Compose now allows a 180-second startup period; the database becomes healthy and dependent commands pass.
+- The first Dockerized test run inherited `APP_ENV=local` through `env_file`, causing CSRF 419s (25 failures in 52 tests). Removing `env_file` lets PHPUnit apply its `testing` environment; the next run had 7 failures from obsolete tests that still expected disabled profile/passkey routes and email-verification gating. Those assertions now reflect the intended staff-only scope; the final run passed all 48 tests / 173 assertions.
+- Early build attempts referenced Wayfinder routes/screens that were intentionally disabled along with public registration, profile deletion/edit, appearance and passkeys. Wayfinder now invokes Artisan through the Docker PHP service, and the active Inertia resolver excludes those unused screens. The final `vp build` passes. The build prints a non-blocking notice that optional `fontaine` is absent; font assets still compile successfully.
+
+### Project-local Docker setup
+
+`Dockerfile` pins Composer 2.10.3/PHP 8.5.11 by image digest and installs `pdo_mysql` and `pcntl`. `compose.yaml` pins the verified MySQL 8.4.11 image by digest, persists the database and Composer vendor dependencies in named volumes, and binds service ports only to localhost. `.env.example` contains development placeholders, not real credentials. Copy it to ignored `.env` and set local-only DB passwords before first use. Exact setup/start/stop/test/build commands are in `backend/README.md`.
+
+No production deployment or production credentials/data were used. Production hosting, mail delivery, backups and privacy operations remain release blockers.

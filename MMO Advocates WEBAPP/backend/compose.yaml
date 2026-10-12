@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - composer_vendor:/workspace/vendor
+    ports:
+      - "127.0.0.1:8000:8000"
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.4@sha256:6ea90827b1100f8f2ae306a539f86d2c264a26ed435a2a9f75551dd5c3aeb242
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-mmo_development}
+      MYSQL_USER: ${DB_USERNAME:-mmo_dev}
+      MYSQL_PASSWORD: "${DB_PASSWORD:?Set DB_PASSWORD in backend/.env}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD in backend/.env}"
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      start_period: 180s
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  composer_vendor:
+  mysql_data:

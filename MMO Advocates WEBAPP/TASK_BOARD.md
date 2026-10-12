@@ -1,14 +1,15 @@
-# MMO Advocates LLP — task board
+# MMO Advocates LLP task board
 
-Current state: documentation scaffold only. No application code, selected stack, schema, tests, or deployment configuration. See [verified project state](MMO%20Advocates%20WEBAPP/docs/PROJECT_STATE.md) and [four-day plan](MMO%20Advocates%20WEBAPP/docs/IMPLEMENTATION_PLAN.md).
+Current state: Laravel 13 React/Inertia backend is bootstrapped in the existing `backend/`. Local Docker/MySQL, lockfile installs, migrations, 48 automated tests, production asset compilation, and host HTTP access are verified. Public website and content workflow remain unimplemented. See [project state](docs/PROJECT_STATE.md) and [implementation plan](docs/IMPLEMENTATION_PLAN.md).
 
-| ID | Status | Task | Acceptance criteria / dependency |
+| ID | Status | Task | Acceptance criteria |
 |---|---|---|---|
-| AUDIT-01 | Done | Inspect repository, project docs, PRD, Git, manifests, entry points, tests, schema, and deployment files | Findings in `docs/PROJECT_STATE.md`; no functionality claimed without source evidence |
-| ARCH-01 | Next | Confirm stack and HostAfrica capability fit | Written choice of runtime/framework/database/session/deployment topology; hosting supports required app, DB, TLS, storage and backups; decisions recorded before code |
-| REQ-01 | Next | Resolve V1 open decisions | Initial case statuses; partner/qualification mapping; approved web logo export; content publish permissions; backup owner/retention documented |
-| BOOT-01 | Next | Create the first executable app foundation after ARCH-01 and REQ-01 | One manifest/lockfile and entry point; documented local run/test commands; clean local startup and empty-database migration; no secrets or real client data committed |
-| API-01 | Backlog | Define schema, API contracts, and permission matrix | Case/follow-up/user/content/audit schema and route contracts; admin/associate/content-editor permissions cover each operation; reviewed before frontend/backend expansion |
-| PUB-01 | Backlog | Implement public pages and content publishing | Home/Services/About/Contact satisfy PRD; only approved published content is public; editor preview/publish and attribution work; responsive acceptance criteria met |
-| CASE-01 | Backlog | Implement private case/follow-up workflows | Login/reset, role enforcement, assignment, search/filters, case detail/history, dashboard, user management and admin recovery satisfy PRD using synthetic data |
-| OPS-01 | Backlog | Verify security, backups, and staging readiness | Access boundaries and restore procedure verified; TLS and HostAfrica assumptions documented; no production deployment without separate authorization |
+| AUDIT-01 | Done | Inspect repository, PRD, instructions, Git, manifests, app entry points, schema, tests and deployment config | Verified inventory and PRD map documented; starter/default scope distinguished from working product behavior |
+| BOOT-01 | Done | Verify local development setup and commands | Pinned Docker PHP/MySQL; Composer/npm lock installs, MySQL migrations, 48 tests, Vite production build, and host `/up` + home HTTP 200 verified |
+| AUTH-01 | Done | Disable self-registration and retain staff authentication/account provisioning | Registration and uncommissioned account routes are unavailable; login/logout/reset, active-account checks, and initial admin provisioning are present; production mail remains a release task |
+| DATA-01 | Done | Define PRD domain schema and synthetic factories | Role/case/follow-up/audit migrations and synthetic factories install on MySQL; tests use synthetic data |
+| ACL-01 | Done | Implement server-side authorization and scoped queries | Case/follow-up/user policies, associate assignment scoping, staff denials and admin restrictions pass feature tests |
+| CASE-01 | Done | Implement case/follow-up workflow and dashboard data | Protected APIs support case operations/filtering, follow-up lifecycle, recoverable admin deletion, audit entries and Nairobi dashboard boundary; staff UI remains separate work |
+| ADMIN-01 | Done | Implement admin user and assignment management | Active admins provision/deactivate accounts and case assignment operations enforce role rules; regression tests pass |
+| CONTENT-01 | Backlog | Implement staff content editing, preview/publication and history | Staff can edit public content; visitors receive published content only; every change records actor/time |
+| VERIFY-01 | In progress | Complete release readiness and hosting review | Local app/tests/assets pass; production email, hosting runtime, TLS, backup/restore and privacy operations remain unverified; no production deploy |

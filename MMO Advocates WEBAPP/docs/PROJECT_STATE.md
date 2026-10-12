@@ -1,98 +1,63 @@
 # Project state
 
-**Verified:** 11 October 2026 (Africa/Nairobi)  
-**Source of requirements:** `MMO_Advocates_PRD-1.docx`
+**Verified:** 12 October 2026 (Africa/Nairobi)
+**Requirements:** `MMO_Advocates_PRD-1.docx`
+**Git:** root `C:\Users\AMREF\Projects\codex-test`, branch `main`, no commits. The project and planning files are untracked/modified in this parent worktree. No production data or credentials are included.
 
-## Repository and technology
+## Stack and application layout
 
-- Git root: `C:\Users\AMREF\Projects\codex-test`; current branch: `main`; no commits yet. `git status --short --branch` reports `?? "MMO Advocates WEBAPP/"`.
-- Project folder contains the PRD, `LOGO MMO.docx`, and Markdown planning/scaffold documents. `LOGO MMO.docx` contains embedded EMF artwork; a reviewed web export is still required.
-- **Selected technology direction:** Laravel with React/Inertia for interactive staff pages, Blade for public pages, Tailwind visual system. TypeScript is a recommended frontend default. Exact Laravel/PHP versions and the database engine are not pinned. MySQL is recommended, subject to HostAfrica verification. No dependency manifest exists yet.
-- **Local tools:** Python 3.11.9, Node.js 24.13.0 and npm 11.21.0 are present. Host PHP, Composer, MySQL CLI and MariaDB CLI are absent from PATH. Docker CLI 29.1.3 is installed; normal-sandbox engine access is denied. With approved elevation, the official Composer 2.10.3 container ran successfully and reported PHP 8.5.11. WSL access is denied. Containerized PHP is available for project setup; there is still no application to run.
-- **Application entry point: none.** There are no source files, route handlers, executable scripts, or app configuration.
-- **Run/test commands: none.** There are no manifests/scripts or test files from which valid commands can be given. The application cannot currently be run or tested.
-- **Architecture: selected direction, not implemented.** The stack decision specifies a single Laravel application with Blade public pages and React/Inertia staff pages; no executable application architecture exists yet.
-- **Database: MySQL recommended but hosting fit not confirmed.** No schema, migration, seed, or database configuration exists.
-- **Project instructions:** no `AGENTS.md`, `CLAUDE.md`, or contributor instructions were found in the inspected repository.
-- **Tests and CI:** absent. No tests were run; there is no application implementation to verify.
+- The application remains in the existing `backend/` directory. It is Laravel Framework 13.35.0 from the official React/Inertia starter kit, PHP requirement `^8.3`, Composer 2.10.3, React 19, TypeScript, Tailwind CSS 4, Vite 8, Fortify, Inertia 3, and Laravel Wayfinder.
+- Exact Composer dependencies are in `backend/composer.lock`; exact npm dependencies are in `backend/package-lock.json`. The starter also contains `pnpm-workspace.yaml`; no pnpm lockfile is used by the documented npm workflow.
+- Host tools: Node.js 24.13.0/npm 11.21.0. PHP and Composer are unavailable natively. Project-local Docker uses pinned Composer and MySQL image digests. PHP 8.5.11 and Composer 2.10.3 were verified in the container, with PDO MySQL, PDO SQLite, mbstring, cURL, DOM/XML, fileinfo, OpenSSL, tokenizer, zip, and pcntl extensions.
+- Web entry: `backend/public/index.php`; CLI: `backend/artisan`; HTTP routes: `backend/routes/web.php`; React entry: `backend/resources/js/app.tsx`; Vite config: `backend/vite.config.ts`.
+- Laravel conventions are authoritative (`app/`, `routes/`, `resources/`, `database/`). Pre-existing scaffold directories `frontend/`, `backend/api/`, `backend/application/`, and `backend/domain/` overlap that layout and remain in place. No production deployment configuration is present.
 
-Laravel 13 is the implementation target: its official release notes list PHP 8.3–8.5 support, and the available Composer container runs PHP 8.5.11. React/Inertia is to be installed using Laravel's official React starter kit, then registration disabled because the PRD forbids visitor/client accounts. Exact dependency versions will be pinned in the generated Composer/npm lockfiles.
+## Verified local setup
 
-The Git repository is the parent folder. The complete application folder remains untracked and there are no commits, so the current files are not yet captured in repository history.
+Run setup and routine commands from [backend local development](../backend/README.md). The Compose file is `backend/compose.yaml`; it provides PHP/Composer/Artisan and MySQL 8.4. App and database ports bind to loopback. `.env.example` contains placeholders only; `.env` is ignored. The MySQL volume persists between `docker compose down` and restarts.
 
-## Implementation inventory
+Verified commands/results:
 
-| Area | Verified implementation | State |
-|---|---|---|
-| Public website | Requirements and proposed directory names only | Missing |
-| Staff portal | Requirements and proposed directory names only | Missing |
-| Backend/API | Responsibility/architecture notes only; no Laravel application, API or business logic | Missing |
-| Authentication/RBAC | PRD and planning notes only | Missing |
-| Database | Empty planned folders; MySQL is recommended but no schema/migrations/config exist | Missing |
-| Connectors | Empty planned folders; no adapter code or vendor choices | Missing |
-| Assets | Word logo source only; no web-ready export | Partial source supplied; unusable as final web asset until converted/reviewed |
-| Documentation | PRD and Markdown scaffold/planning docs | Present, with decisions still open |
-| Deployment | HostAfrica named as target only; plan/runtime capabilities unverified, no deployment config | Missing/blocking for release |
-| Tests/automation | No test files, test command, or CI configuration | Missing |
+- `docker compose build app` — passed; PHP 8.5.11 image includes `pdo_mysql` and `pcntl`.
+- `docker compose run --rm app composer install --no-interaction --prefer-dist` — passed from `composer.lock`.
+- `docker compose run --rm app php artisan key:generate` — passed for the ignored local `.env` only.
+- `docker compose run --rm app php artisan migrate --force` — passed against MySQL 8.4.11; all framework and application migrations applied.
+- `npm ci --no-audit --no-fund` — passed from `package-lock.json` (242 packages installed).
+- `npm run build` — passed; Vite generated the production manifest, CSS, JavaScript, and font assets under `public/build/`. Wayfinder calls Artisan inside the project PHP container because PHP is unavailable on the host.
+- `docker compose run --rm app php artisan test` — passed, 48 tests and 173 assertions. Tests use synthetic factories and SQLite memory; they do not contain client records.
+- `docker compose up -d app` — passed. Windows host requests to `http://127.0.0.1:8000/up` and `/` returned HTTP 200; the rendered home HTML references compiled `/build/assets/` files.
 
-## V1 requirement traceability
+Use `docker compose stop` to stop services while preserving data, or `docker compose down` to remove containers/network while keeping named volumes. Do not use client or production data locally.
 
-Every application behavior below is currently **not implemented**. The directory scaffold and documentation do not count as working functionality.
+## Architecture and implementation state
 
-| PRD requirement | Planned area | Current state |
-|---|---|---|
-| Public Home page: firm name, logo, introduction, call to phone | `frontend/public-site` | Missing |
-| Services page listing conveyancing, criminal, environmental/land, succession, civil litigation, small claims, divorce, child custody | `frontend/public-site` | Missing |
-| About/areas of work: litigation, conveyancing, drafting, mediation, research | `frontend/public-site` | Missing |
-| About page lists partners and qualifications | `frontend/public-site`, approved content | Missing; partner-to-qualification mapping needs confirmation |
-| Contact page: phone, email, office address | `frontend/public-site` | Missing |
-| Public site is read-only to visitors; no booking, client accounts, or payments | `frontend/public-site`, backend public routes | Missing |
-| Content editor can edit public services/contact/text | Staff portal, backend content service | Missing |
-| Content changes are logged | Backend audit service/database | Missing |
-| Content preview before publishing (clarification in scaffold docs) | Staff portal, backend content service | Missing; confirm approval/publish responsibilities |
-| Secure staff login and logout | Auth connector, backend API, staff portal | Missing |
-| Password reset | Auth and email connector | Missing |
-| Optional two-factor authentication | Auth connector | Missing (optional PRD item) |
-| Case list with search and status/type/next-follow-up filters | Staff portal, case API/database | Missing |
-| Case record fields: client name/contact, type, number, court, status, assigned lawyer, opening date | Domain/database, case API/UI | Missing |
-| Follow-up fields: date, note, pending/done status, assignee | Domain/database, follow-up API/UI | Missing |
-| Dashboard for today's and overdue follow-ups | Staff portal, follow-up service | Missing |
-| Admin creates/deactivates accounts and assigns cases | User/case administration API and UI | Missing |
-| Admin sees all cases/follow-ups and manages users | Backend policies/API and staff portal | Missing |
-| Associate sees only assigned cases; can add/edit assigned cases and follow-ups | Backend policies/API and staff portal | Missing |
-| Content editor can edit public content but cannot access cases or user management | Backend policies/API and staff portal | Missing |
-| Admin can delete cases; accidental deletion is recoverable per scaffold clarification | Case service/database/admin UI | Missing |
-| Case/follow-up create and change history identifies actor and time (scaffold clarification) | Audit service/database | Missing |
-| Public pages: Home, Services, About, Contact | Frontend | Missing |
-| Private pages: Login, Dashboard, Cases, Case detail/timeline, Add/Edit case, Follow-ups, admin User management | Staff portal | Missing |
-| HTTPS and hashed passwords | Deployment/authentication | Missing |
-| Case pages private and excluded from search indexing | Backend, frontend, deployment | Missing |
-| Regular automatic database backups | Hosting/storage operations | Missing |
-| Phone, tablet, desktop compatibility | Frontend | Missing |
-| Handle client data in line with Kenya Data Protection Act | Whole system and operations | Missing; requirement only, not evidence of compliance |
-| HostAfrica hosting target | Deployment | Not configured; provider capabilities/topology unverified |
-| Success metrics: visitors find services/phone quickly; no missed follow-ups; cases found under 10 seconds | UX and operational acceptance | Not measurable until implemented and evaluated |
-| Risks: shared-host confidentiality, data loss, content-editor misuse | Architecture, access controls, backups, audit | Unmitigated in software; documentation only |
+The backend is one Laravel application. Public pages use Blade-capable Laravel routes; the staff interface is configured for React/Inertia. MySQL 8.4 is the verified local development database. There is no separate API service or production database connection.
 
-### Explicit V1 exclusions
+Implemented foundations:
 
-Booking/appointments, client portal/accounts, online payments, document uploads, and SMS/email follow-up reminders are not to be implemented in V1. Password-reset email is distinct and remains required.
+- Fortify login/logout, password reset, email verification endpoints, optional two-factor support, active-account login checks, and an interactive first-admin provisioning command. Public self-registration is disabled. Profile editing/deletion and passkey UI/routes are excluded. Email delivery is not configured beyond the local log mailer; dashboard access does not require verified email until staff delivery/provisioning is configured.
+- User role (`admin`, `associate`, `staff`) and active status; case records with recoverable soft deletion; follow-ups and audit event tables, models, factories, and migrations.
+- Server-side case, follow-up and user policies; authenticated active-account middleware; protected case, follow-up, dashboard and user-management endpoints; associate assignment scoping; staff denial from case records and user administration; audit writes on case and user mutations. Initial feature and policy tests cover these boundaries.
 
-## Conflicts, overlaps, and deployment blockers
+Partially implemented or missing:
 
-- The scaffold has both `frontend/shared/` and root `shared/`; Laravel's conventional `resources/` layout may make both redundant. The later stack decision describes a mapping, but no move is authorized or needed for the first backend slice.
-- `connectors/hosting/` and `infrastructure/deployment/` overlap by name. Keep provider integration notes/adapters under connectors and actual deploy/runtime configuration under infrastructure, or remove the redundant folder.
-- The logo source remains at project root, while `assets/brand/source/` is empty. Move/copy only after deciding the canonical asset location; do not mistake the Word/EMF source for a web-ready logo.
-- No source code, package manifests, tests, schema, migrations, or deployment config exists. Therefore there is currently no command to start, build, test, or deploy.
-- PHP and Composer are missing locally. The Docker engine requires elevated access. This blocks a verified Laravel install/run in the ordinary shell, but the elevated Docker route can support local implementation if approved for dependency pulls and container mounts.
-- HostAfrica's supported runtime, database, TLS, scheduled backups, persistent storage, and staging capabilities have not been verified. This blocks stack/deployment selection.
-- HostAfrica's actual plan, supported PHP/extensions/MySQL, document-root controls, cron, SMTP, storage, staging and backup/restore capability remains unverified and blocks deployment design, not local backend work.
-- The exact Laravel/PHP dependency versions and MySQL confirmation remain to be pinned. The initial case-status list, partner qualification mapping, backup owner/retention, content preview/publish approval responsibilities and logo export remain open decisions.
-- Older `TIERED_SCOPE_PROPOSAL.md` public-only scope and older “implementation not authorized” statements are superseded for this engineering task by the user's 11 October instruction to implement the PRD backend. Booking, client accounts, payments, uploads and reminder products remain out of scope.
+- Public home, services, about, contact, partner profiles and qualifications still use starter content or are missing.
+- Staff case APIs and data access are implemented and tested, but a complete staff-facing case-management UI, content editing/publishing workflow, and content audit flow are missing.
+- Password-reset delivery, staff account email onboarding, production database/email/hosting, HTTPS, backup/restore, CI, and deployment procedures are not configured or verified.
 
-## Documentation index
+## PRD coverage
 
-- `docs/IMPLEMENTATION_PLAN.md`: four-day minimum sequence and dependencies.
-- [`TASK_BOARD.md`](../../TASK_BOARD.md) at the Git root: current tasks and acceptance criteria.
-- `docs/PROJECT_ASSESSMENT.md`: short index to this verified current state; do not maintain a second inventory there.
-- `docs/STACK_DECISION_AND_COMPARISON.md`: selected stack direction; MySQL/versions/hosting remain conditional.
+| Requirement | State |
+|---|---|
+| Public home, services, about, contact, partners and qualifications | Missing; current page is Laravel starter content. |
+| Visitors cannot register | Implemented; Fortify registration is disabled and a regression test passes. |
+| Staff authentication and password reset | Fortify flows and account-status checks implemented; delivery configuration remains. |
+| Admin/Associate/Staff case and user boundaries | Server-side policies/routes and feature tests implemented for case and account operations. Staff public-content editing remains missing. |
+| Case records, filters, assigned-case scoping and recoverable deletion | Backend foundation and protected endpoints implemented; full staff UI/history remains. |
+| Follow-ups and Nairobi calendar dashboard data | Backend endpoints and timezone/date-boundary tests implemented; staff UI remains. |
+| Admin user creation, deactivation and assignment controls | Account APIs and tests implemented; first-admin local provisioning exists. Onboarding mail is not verified. |
+| Staff public-content editing, preview, publication and history | Missing. |
+| Synthetic acceptance/security testing | 48 tests / 173 assertions pass; fixtures use synthetic data. |
+| Production hosting, email, HTTPS, backups, privacy operations | Not configured; deployment blockers. |
+
+See [implementation plan](IMPLEMENTATION_PLAN.md), [task board](../TASK_BOARD.md), and BOOT-01 in [the bootstrap decision record](decisions/BOOTSTRAP_DECISION.md).

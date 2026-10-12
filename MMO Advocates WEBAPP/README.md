@@ -1,39 +1,27 @@
-# MMO Advocates LLP web application
+# MMO Advocates LLP website and case-management application
 
-## Current status
+The Laravel 13 React/Inertia application lives in the existing `backend/` directory. See the [verified project state](docs/PROJECT_STATE.md), [implementation plan](docs/IMPLEMENTATION_PLAN.md), and [task board](TASK_BOARD.md).
 
-This repository is currently a documentation and directory scaffold. It has no application source, dependency manifests, executable entry point, tests, database schema/migrations, or deployment configuration. The selected direction is Laravel with React/Inertia for staff application screens, Blade for public pages, and Tailwind. MySQL is the recommended database pending HostAfrica capability verification. The current user request authorizes the primary engineer to implement the PRD backend; no code has been created yet. The folder names below remain planned ownership boundaries.
+## Local development
 
-Git is currently on `main`, has no commits, and reports the entire `MMO Advocates WEBAPP/` folder and root `TASK_BOARD.md` as untracked. Node.js/npm are available, but PHP/Composer are not. Docker CLI is installed; access to its engine required elevation. The application is not runnable yet.
+PHP and Composer run in the project-local Docker environment; Node.js/npm run natively. Follow [backend setup and commands](backend/README.md). Composer and npm lockfiles make dependency installation reproducible. The local MySQL database and web server bind to loopback, and `.env.example` contains local placeholders only.
 
-```text
-frontend/
-  public-site/       Home, Services, About, Contact, public content and components
-  staff-portal/      Login, dashboard, cases, follow-ups, admin user management
-  shared/            UI used by both frontends
-backend/
-  api/               Routes, authentication middleware and authorization policies
-  application/       Case, follow-up, account, content and audit services/validation
-  domain/            Roles and core case-management rules
-  database/          Schema, migrations and development seed data
-connectors/
-  authentication/    Staff login, logout, reset and optional 2FA adapter
-  database/          Persistence adapter
-  email/             Password reset only in v1
-  storage/            Public assets and private backups
-  hosting/            HostAfrica deployment adapter/notes
-shared/               API contracts and safe shared configuration
-assets/                Brand source, web-ready logo export and public media
-docs/                  Requirements, architecture and security/privacy notes
-infrastructure/        Deployment configuration
+From `backend/`, routine commands are:
+
+```powershell
+docker compose up -d db app
+npm ci
+npm run build
+docker compose run --rm app php artisan migrate --force
+docker compose run --rm app php artisan test
+docker compose stop
 ```
 
-## Boundaries from the PRD
+The application responds at `http://localhost:8000`; MySQL is available to host tools at `127.0.0.1:3307`. Tests use synthetic data. Do not use production credentials or client data here.
 
-- Public pages are read-only for visitors. Staff can preview and publish approved content.
-- Staff portal is private. The backend enforces Admin, Associate (assigned cases only), and Content Editor (public content only) permissions on every request.
-- Track actor and timestamp for case, follow-up, and content changes. Cases deleted by mistake must be recoverable by an admin.
-- Follow-up deadlines use Africa/Nairobi time. Backups need a retention period and restore checks.
-- Booking, client accounts, payments, document uploads, and reminders are outside version 1.
+## Product boundaries
 
-The PRD remains the V1 behavior baseline. Confirm exact framework/database versions and HostAfrica deployment compatibility before release. See [project state](docs/PROJECT_STATE.md), [implementation plan](docs/IMPLEMENTATION_PLAN.md), [task board](../TASK_BOARD.md), [stack decision](docs/STACK_DECISION_AND_COMPARISON.md), and [requirements checklist](docs/requirements.md).
+- Visitors use public pages only and cannot register.
+- Admins can access all cases and manage staff accounts; Associates can access assigned cases; Staff have no access to case records or user administration.
+- Server-side authorization is enforced in Laravel.
+- Production deployment, client portal, booking, payments, document uploads, SMS reminders, and production client data are outside this bootstrap.
