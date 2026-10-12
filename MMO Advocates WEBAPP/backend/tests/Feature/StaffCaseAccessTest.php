@@ -25,9 +25,22 @@ class StaffCaseAccessTest extends TestCase
             ->assertJsonFragment(['client_name' => 'Synthetic assigned case'])
             ->assertJsonMissing(['client_name' => 'Synthetic other case']);
 
+        $otherCase = CaseRecord::where('client_name', 'Synthetic other case')->firstOrFail();
+        $this->actingAs($associate)->getJson('/staff/cases/'.$otherCase->id)->assertForbidden();
+        $this->actingAs($associate)->patchJson('/staff/cases/'.$otherCase->id, ['status' => 'tampered'])->assertForbidden();
+
         $this->actingAs(User::factory()->admin()->create())->getJson('/staff/cases')
             ->assertOk()
             ->assertJsonCount(2);
+    }
+
+    public function test_associate_cannot_delete_cases(): void
+    {
+        $associate = User::factory()->associate()->create();
+        $case = CaseRecord::factory()->create(['assigned_lawyer_id' => $associate->id]);
+
+        $this->actingAs($associate)->deleteJson('/staff/cases/'.$case->id)->assertForbidden();
+        $this->assertDatabaseHas('cases', ['id' => $case->id, 'deleted_at' => null]);
     }
 
     public function test_staff_cannot_access_case_records_and_associate_creation_assigns_to_self(): void

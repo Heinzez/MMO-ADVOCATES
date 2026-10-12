@@ -32,8 +32,8 @@ class UserPolicy
         return $user->is_active && $user->role === UserRole::Admin && $user->id !== $target->id;
     }
 
-    public function reactivate(User $user): bool
+    public function reactivate(User $user, User $target): bool
     {
-        return $user->is_active && $user->role === UserRole::Admin;
+        return $user->is_active && $user->role === UserRole::Admin && $user->id !== $target->id;
     }
 }
