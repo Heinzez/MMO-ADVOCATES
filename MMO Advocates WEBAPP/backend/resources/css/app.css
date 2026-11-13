@@ -8,6 +8,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+    --font-serif:
+        'Cinzel', 'Playfair Display', Georgia, Cambria, 'Times New Roman',
+        Times, serif;
+
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -59,77 +63,111 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    /* MMO Advocates LLP Brand Tokens */
+    --color-brand-navy: var(--brand-navy);
+    --color-brand-blue: var(--brand-blue);
+    --color-brand-gold: var(--brand-gold);
+    --color-brand-gold-hover: var(--brand-gold-hover);
+    --color-brand-charcoal: var(--brand-charcoal);
+    --color-brand-cream: var(--brand-cream);
+    --color-brand-surface: var(--brand-surface);
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.87 0 0);
+    /* Brand Foundation */
+    --brand-navy: #0f294a;
+    --brand-blue: #1c66ab;
+    --brand-gold: #d97706;
+    --brand-gold-hover: #b45309;
+    --brand-charcoal: #1e293b;
+    --brand-cream: #fbfaf8;
+    --brand-surface: #f4f1ea;
+
+    /* Semantic Application Tokens - Editorial Legal Palette */
+    --background: #fdfcfb;
+    --foreground: #0f172a;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    --primary: #0f294a;
+    --primary-foreground: #ffffff;
+    --secondary: #f4f1ea;
+    --secondary-foreground: #0f294a;
+    --muted: #f4f1ea;
+    --muted-foreground: #475569;
+    --accent: #fef3c7;
+    --accent-foreground: #92400e;
+    --destructive: #b91c1c;
+    --destructive-foreground: #ffffff;
+    --border: #e2ddd5;
+    --input: #e2ddd5;
+    --ring: #1c66ab;
+    --radius: 0.375rem;
+
+    --chart-1: #0f294a;
+    --chart-2: #1c66ab;
+    --chart-3: #d97706;
+    --chart-4: #475569;
+    --chart-5: #0284c7;
+
+    /* Staff Portal Sidebar - Authoritative Navy */
+    --sidebar: #0f294a;
+    --sidebar-foreground: #f8fafc;
+    --sidebar-primary: #1c66ab;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #193a63;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #193a63;
+    --sidebar-ring: #38bdf8;
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.985 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    /* Brand Foundation */
+    --brand-navy: #09131f;
+    --brand-blue: #38bdf8;
+    --brand-gold: #fbbf24;
+    --brand-gold-hover: #f59e0b;
+    --brand-charcoal: #f1f5f9;
+    --brand-cream: #0d1e33;
+    --brand-surface: #132742;
+
+    /* Dark Mode Tokens - Refined Executive Night */
+    --background: #09131f;
+    --foreground: #f1f5f9;
+    --card: #0d1e33;
+    --card-foreground: #f1f5f9;
+    --popover: #0d1e33;
+    --popover-foreground: #f1f5f9;
+    --primary: #38bdf8;
+    --primary-foreground: #09131f;
+    --secondary: #132742;
+    --secondary-foreground: #f1f5f9;
+    --muted: #132742;
+    --muted-foreground: #94a3b8;
+    --accent: #193a63;
+    --accent-foreground: #fef08a;
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --border: #1e3a5f;
+    --input: #1e3a5f;
+    --ring: #38bdf8;
+
+    --chart-1: #38bdf8;
+    --chart-2: #fbbf24;
+    --chart-3: #94a3b8;
+    --chart-4: #60a5fa;
+    --chart-5: #34d399;
+
+    --sidebar: #060e17;
+    --sidebar-foreground: #f1f5f9;
+    --sidebar-primary: #38bdf8;
+    --sidebar-primary-foreground: #060e17;
+    --sidebar-accent: #0f233a;
+    --sidebar-accent-foreground: #f1f5f9;
+    --sidebar-border: #132742;
+    --sidebar-ring: #38bdf8;
 }
 
 @layer base {

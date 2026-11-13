@@ -1,9 +1,12 @@
-﻿# Project assessment
+# Project assessment
 
-The detailed assessment previously kept in this file has been superseded by the verified repository audit. To avoid maintaining duplicate status inventories, use these current documents:
+The existing Laravel 13 React/Inertia starter has been bootstrapped in `backend/`, without creating another application. The local Docker/PHP/MySQL environment, Composer and npm lockfile installs, MySQL migrations, production asset build, Windows host HTTP service, and complete 48-test suite have been verified.
 
-- [Project state and V1 requirement traceability](PROJECT_STATE.md)
-- [Four-day implementation plan](IMPLEMENTATION_PLAN.md)
-- [Task board](../../TASK_BOARD.md)
+The backend now contains staff authentication foundations, disabled public registration, role and active-account handling, case/follow-up/dashboard/user endpoints, server-side policies, audit entries, and synthetic test coverage. It is not a complete V1 product: the public site and partner qualifications, full staff UI, public-content editing/publishing, production mail, hosting, backups and release operations remain outstanding.
 
-The repository audit confirmed that the project folder is a documentation scaffold, not a runnable application. It found no source entry point, manifests, tests, schema/migrations, or deployment configuration. No functionality or test result is claimed here beyond that inspection; see `PROJECT_STATE.md` for the evidence and per-requirement map.
+Use these maintained documents for detail:
+
+- [Project state and V1 traceability](PROJECT_STATE.md)
+- [Implementation plan](IMPLEMENTATION_PLAN.md)
+- [Task board](../TASK_BOARD.md)
+- [BOOT-01 command results and resolved failures](decisions/BOOTSTRAP_DECISION.md)

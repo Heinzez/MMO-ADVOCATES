@@ -12,17 +12,17 @@ Firm agreement is user-reported, not item-level content sign-off or permission t
 
 ## Current authorization
 
-Planning and documentation only. Do not bootstrap, install dependencies, implement application code, launch other agents, initialize repositories, commit/push, purchase services, deploy, modify account permissions or access production data without explicit authorization for that work. This file is coordination guidance, not permission to begin implementation.
+The user has explicitly authorized the primary engineer to inspect, scaffold within the existing project, install dependencies, and implement the supplied PRD backend and automated tests using synthetic data. This supersedes earlier planning-only/public-only scope language in this file and older proposals. Do not recreate the project or replace its working stack without a demonstrated reason. No production deployment, real client data, secret exposure, spending, external sends, or permission changes are authorized. Do not launch other agents unless explicitly requested.
 
 ## Product and scope
 
-First delivery: public Home, Services, About and Contact pages with approved information and phone/email links. Staff case management, CMS/editor dashboard, booking, client accounts, payments, uploads, reminders and live chat are later separately commissioned modules. No dummy working buttons or unimplemented features presented as complete.
+V1 includes public Home, Services, About and Contact plus staff authentication, role-controlled case/follow-up management, dashboard, user administration, public content editing, and audit history as specified by the supplied PRD. Booking, client accounts, payments, document uploads, reminders and live chat remain out of scope. Do not present unimplemented features as complete.
 
 Public-only delivery does not fulfill the entire original staff-system PRD. Budget reference is provisional 70k, currency unconfirmed; do not invent prices. Firm pays hosting and maintenance separately. No spending now; domain and hosting are not purchased.
 
 ## Selected architecture
 
-Laravel application; server-rendered Blade public pages; React/Inertia for future interactive modules. Tailwind shared visual system. TypeScript and MySQL are recommended defaults, not fully approved version/hosting decisions. Exact versions and layout require a recorded foundation decision.
+Laravel 13 is the selected framework version, confirmed by the user on 11 October 2026. Server-rendered Blade public pages; React/Inertia for future interactive modules; Tailwind shared visual system. TypeScript and MySQL are recommended defaults. Confirm Laravel 13-compatible PHP, dependencies and hosting before bootstrap; do not silently downgrade to Laravel 11. Exact package versions and layout still require a recorded foundation decision.
 
 No separate frontend server/API or persistent Node runtime is required by the baseline. Do not introduce Livewire alongside React to manage the same screens without a justified decision. Keep public content and private module data separate. Upgrade flexibility means clean interfaces, not speculative features/schema.
 
@@ -36,7 +36,7 @@ User's current authorized instructions take precedence over planning proposals. 
 
 Reported parent Git root: C:\Users\AMREF\Projects\codex-test. Verify before actions. Do not initialize a nested repository or assume old branch/commit status remains current. Only this project path is currently approved for writes; request access/authorization before modifying parent-wide instructions or task boards.
 
-No application setup/build/test/lint commands are verified yet. Do not invent them or claim tests have run. Once implementation is authorized, document commands only after verifying them from the selected manifests and a clean setup.
+Current setup and verification status is in `docs/PROJECT_STATE.md`. The Laravel CLI and targeted PHP tests run through the approved Composer container; frontend installation/build and end-to-end HTTP startup are not verified. Record exact test outcomes and do not claim untested functionality.
 
 ## Ownership when work is explicitly dispatched
 

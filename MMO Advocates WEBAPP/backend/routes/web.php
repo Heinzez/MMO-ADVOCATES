@@ -5,9 +5,13 @@ use App\Http\Controllers\Staff\ContentController;
 use App\Http\Controllers\Staff\DashboardController;
 use App\Http\Controllers\Staff\FollowUpController;
 use App\Http\Controllers\Staff\UserController;
+use App\Http\Controllers\PublicPageController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', [PublicPageController::class, 'home'])->name('home');
+Route::get('/services', [PublicPageController::class, 'services'])->name('public.services');
+Route::get('/about', [PublicPageController::class, 'about'])->name('public.about');
+Route::get('/contact', [PublicPageController::class, 'contact'])->name('public.contact');
 Route::get('public-content/{slug}', [ContentController::class, 'publicShow'])
     ->where('slug', '[a-z0-9-]+')->name('public-content.show');
 
@@ -20,6 +24,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('cases', [CaseRecordController::class, 'index'])->name('cases.index');
         Route::post('cases', [CaseRecordController::class, 'store'])->name('cases.store');
         Route::get('cases/{caseRecord}', [CaseRecordController::class, 'show'])->name('cases.show');
+        Route::get('cases/{caseRecord}/history', [CaseRecordController::class, 'history'])->name('cases.history');
         Route::patch('cases/{caseRecord}', [CaseRecordController::class, 'update'])->name('cases.update');
         Route::delete('cases/{caseRecord}', [CaseRecordController::class, 'destroy'])->name('cases.destroy');
         Route::post('cases/{caseId}/restore', [CaseRecordController::class, 'restore'])->name('cases.restore');

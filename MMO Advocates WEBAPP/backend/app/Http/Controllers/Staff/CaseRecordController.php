@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\AuditEvent;
 use App\Models\CaseRecord;
+use App\Models\FollowUp;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,36 @@ class CaseRecordController extends Controller
         $this->authorize('view', $caseRecord);
 
         return $this->privateJson($caseRecord->load(['assignedLawyer:id,name', 'followUps.assignee:id,name']));
+    }
+
+    public function history(CaseRecord $caseRecord): JsonResponse
+    {
+        $this->authorize('view', $caseRecord);
+
+        $followUpIds = $caseRecord->followUps()->pluck('id');
+        $events = AuditEvent::query()
+            ->with('actor:id,name')
+            ->where(function ($query) use ($caseRecord, $followUpIds): void {
+                $query->where(fn ($query) => $query
+                    ->where('subject_type', CaseRecord::class)
+                    ->where('subject_id', $caseRecord->id));
+
+                if ($followUpIds->isNotEmpty()) {
+                    $query->orWhere(fn ($query) => $query
+                        ->where('subject_type', FollowUp::class)
+                        ->whereIn('subject_id', $followUpIds));
+                }
+            })
+            ->orderByDesc('created_at')
+            ->get(['id', 'actor_id', 'event', 'subject_type', 'subject_id', 'created_at']);
+
+        return $this->privateJson($events->map(fn (AuditEvent $event): array => [
+            'event' => $event->event,
+            'actor' => $event->actor?->only(['id', 'name']),
+            'subject_type' => $event->subject_type === CaseRecord::class ? 'case' : 'follow_up',
+            'subject_id' => $event->subject_id,
+            'created_at' => $event->created_at,
+        ])->values());
     }
 
     public function store(Request $request): JsonResponse

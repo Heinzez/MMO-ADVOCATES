@@ -36,7 +36,7 @@ class PublicContentAccessTest extends TestCase
             ->assertJsonPath('body', 'Initial synthetic content')
             ->assertJsonStructure(['slug', 'title', 'body', 'published_at'])
             ->assertJsonMissingPath('updated_by')
-            ->assertHeader('Cache-Control', 'public, max-age=60');
+            ->assertHeader('Cache-Control', 'max-age=60, public');
 
         $this->assertDatabaseHas('audit_events', ['actor_id' => $staff->id, 'event' => 'content.created', 'subject_id' => $item->id]);
         $this->assertDatabaseHas('audit_events', ['actor_id' => $staff->id, 'event' => 'content.published', 'subject_id' => $item->id]);
@@ -51,7 +51,7 @@ class PublicContentAccessTest extends TestCase
         $this->actingAs($associate)->postJson('/staff/content', [
             'slug' => 'services', 'title' => 'Services', 'body' => 'Synthetic',
         ])->assertForbidden();
-        $this->getJson('/staff/cases')->assertForbidden();
+        $this->actingAs(User::factory()->create())->getJson('/staff/cases')->assertForbidden();
         $this->getJson('/staff/users')->assertForbidden();
 
         $admin = User::factory()->admin()->create();
@@ -69,5 +69,45 @@ class PublicContentAccessTest extends TestCase
 
         $this->getJson('/public-content/about')->assertNotFound();
         $this->getJson('/staff/content')->assertUnauthorized();
+    }
+
+    public function test_public_blade_pages_render_without_private_data(): void
+    {
+        $this->get('/')->assertOk()->assertViewIs('public.home')->assertSee('Legal services');
+        $this->get('/services')->assertOk()->assertViewIs('public.services')->assertSee('Conveyancing');
+        $this->get('/about')->assertOk()->assertViewIs('public.about')->assertSee('MMO Advocates LLP');
+        $this->get('/contact')->assertOk()->assertViewIs('public.contact')->assertSee('0725 144 472');
+    }
+
+    public function test_inactive_editor_and_associate_cannot_reach_content_management_urls(): void
+    {
+        $item = PublicContentItem::create([
+            'slug' => 'private-draft', 'title' => 'Draft', 'body' => 'Synthetic draft',
+            'status' => 'draft', 'updated_by' => User::factory()->create()->id,
+        ]);
+
+        $this->getJson('/staff/content')->assertUnauthorized();
+        $this->actingAs(User::factory()->create(['is_active' => false]))
+            ->getJson('/staff/content')->assertForbidden();
+        $this->actingAs(User::factory()->associate()->create())
+            ->postJson('/staff/content/'.$item->id.'/publish')->assertForbidden();
+        $this->getJson('/public-content/private-draft')->assertNotFound();
+    }
+
+    public function test_untrusted_content_is_not_rendered_as_markup_in_public_pages(): void
+    {
+        $staff = User::factory()->create();
+        $markup = '<script>synthetic-xss()</script>';
+        $item = PublicContentItem::create([
+            'slug' => 'xss-check', 'title' => 'Synthetic title', 'body' => $markup,
+            'status' => 'draft', 'updated_by' => $staff->id,
+        ]);
+        $this->actingAs($staff)->postJson('/staff/content/'.$item->id.'/publish')->assertOk();
+
+        $this->getJson('/public-content/xss-check')
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonPath('body', $markup);
+        $this->get('/')->assertOk()->assertDontSee('synthetic-xss()', false);
     }
 }

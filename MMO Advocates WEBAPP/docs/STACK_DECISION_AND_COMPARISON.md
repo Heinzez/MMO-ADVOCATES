@@ -1,11 +1,11 @@
 # Stack decision and comparison
 
-Date: 10 October 2026; authority reconciled 11 October 2026
-Status: Stack direction confirmed by user. The 11 October 2026 request authorizes the primary engineer to implement the PRD backend. No agents, production deployment, purchase, or remote repository action is authorized.
+Date: 10 October 2026; authority reconciled 12 October 2026
+Status: Laravel 13 React/Inertia with Blade public pages is implemented in the existing `backend/`. Local MySQL 8.4, Docker PHP 8.5.11/Composer 2.10.3, and native Node/npm are verified. Production hosting/database remain unverified. No production deployment, purchase, or remote repository action is authorized.
 
 ## Selected direction
 
-Laravel with React/Inertia for interactive application modules; server-rendered Blade for public pages; Tailwind for a shared visual system. TypeScript and MySQL remain recommended defaults subject to dependency/hosting confirmation. No separate frontend service or standalone public API in the initial scope.
+Laravel with React/Inertia for interactive application modules; server-rendered Blade for public pages; Tailwind for a shared visual system. The official starter provides TypeScript and Tailwind 4. MySQL 8.4 is the verified local development database; the actual production database remains subject to hosting confirmation. No separate frontend service or standalone public API in the initial scope.
 
 The earlier public-website-first tiering is superseded for the current engineering task: the user explicitly assigned backend implementation for database/migrations, authentication/reset, server authorization, roles, cases, follow-ups, dashboard data, user management, audit logging, integration and automated tests. The supplied PRD remains the V1 requirements source. Booking and client accounts/portal remain out of scope.
 
@@ -64,7 +64,7 @@ The reported Git root is its parent, codex-test. Parent-wide instructions belong
 All tools must be configured or prompted to read the project instructions; the filename alone is not a guarantee that every agent platform loads it automatically. An optional CLAUDE.md can point to AGENTS.md and contain tool-specific details. Avoid conflicting duplicate instruction documents.
 
 Suggested contents:
-1. Product goal and current contracted edition: public website first; future modules not implemented without approval.
+1. Product goal and authorized V1 scope: public website and PRD staff case-management system; booking, client accounts, payments, uploads and reminders remain out of scope.
 2. Selected stack, project layout and links to architecture/requirements/decision records.
 3. Setup/build/test/lint commands after they exist and are verified; do not invent commands now.
 4. File ownership, one integration owner, branch/worktree rules and shared contract change protocol.
@@ -75,8 +75,8 @@ Suggested contents:
 9. Prohibited actions without separate authorization: deploy, purchase, send messages, change permissions, destructive migration or production data access.
 10. Handoff format: changed files, contract revision, tests/results, gaps and dependencies.
 
-This document describes AGENTS.md; it does not create executable agent instructions or authorize agents to start.
+This document describes AGENTS.md; it does not create executable agent instructions. The current user explicitly authorized the primary engineer to implement the PRD backend; delegation remains unrequested.
 
 ## Prior plans
 
-This decision supersedes the Blade/minimal-Alpine-only recommendation in PROPOSED_ARCHITECTURE.md. The existing handoff plan remains a useful future staff-system template, but its frontend ownership must include backend/resources/js/pages/** and shared React components when React is introduced. Its private-system gates do not all block a public-only website. Use TIERED_SCOPE_PROPOSAL.md to separate edition acceptance criteria. Neither the earlier four-day estimate nor this selection authorizes implementation.
+This decision supersedes the Blade/minimal-Alpine-only recommendation in PROPOSED_ARCHITECTURE.md. The existing handoff plan remains a useful template, with frontend ownership under `backend/resources/js/`. The current implementation status and acceptance plan are in `PROJECT_STATE.md` and `IMPLEMENTATION_PLAN.md`; the primary engineer has explicit authorization to proceed within the supplied PRD.

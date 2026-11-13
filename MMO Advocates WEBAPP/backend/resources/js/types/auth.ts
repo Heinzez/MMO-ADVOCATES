@@ -4,6 +4,8 @@ export type User = {
     email: string;
     avatar?: string;
     email_verified_at: string | null;
+    role?: 'admin' | 'associate' | 'staff' | string;
+    is_active?: boolean;
     /* @chisel-2fa */
     two_factor_enabled?: boolean;
     /* @end-chisel-2fa */
