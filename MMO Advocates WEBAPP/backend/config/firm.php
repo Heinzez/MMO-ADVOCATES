@@ -12,6 +12,14 @@
  */
 
 return [
+    /*
+     * Whether the public pages look up published overrides from the website
+     * content module. A deployment that serves only the static public pages,
+     * with no database attached, sets PUBLIC_CONTENT_OVERRIDES=false so no
+     * connection is attempted at all.
+     */
+    'content_overrides' => env('PUBLIC_CONTENT_OVERRIDES', true),
+
     'name' => 'MMO ADVOCATES LLP',
     'legal_name' => 'MMO Advocates LLP',
     'tagline' => 'COUNSEL. INTEGRITY. EXCELLENCE.',

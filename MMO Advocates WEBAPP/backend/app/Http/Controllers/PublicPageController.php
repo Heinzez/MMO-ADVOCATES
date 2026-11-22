@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\PublicContentItem;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+use PDOException;
 
 class PublicPageController extends Controller
 {
@@ -29,10 +32,29 @@ class PublicPageController extends Controller
 
     private function page(string $view, string $slug): Response
     {
-        $item = PublicContentItem::query()
-            ->where('status', 'published')
-            ->where('published_slug', $slug)
-            ->first();
+        /*
+         * Every public page carries complete static copy, and a published
+         * content item only overrides its heading and body. A database that is
+         * unreachable must therefore degrade to that static copy rather than
+         * return an error page to a visitor.
+         */
+        $item = null;
+
+        if (config('firm.content_overrides')) {
+            try {
+                $item = PublicContentItem::query()
+                    ->where('status', 'published')
+                    ->where('published_slug', $slug)
+                    ->first();
+            } catch (QueryException|PDOException $exception) {
+                // A warning, not a reported exception: a stack trace on every
+                // request would bury the real signal in the runtime logs.
+                Log::warning('Published content unavailable; serving static page copy.', [
+                    'slug' => $slug,
+                    'reason' => $exception->getMessage(),
+                ]);
+            }
+        }
 
         $publishedContent = $item === null ? null : [
             'slug' => $item->published_slug,

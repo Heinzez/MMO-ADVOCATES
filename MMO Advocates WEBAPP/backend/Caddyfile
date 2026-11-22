@@ -1,0 +1,39 @@
+{
+	frankenphp
+	order php_server before file_server
+	auto_https off
+	admin off
+	log {
+		output stderr
+		format json
+	}
+}
+
+:{$PORT:80} {
+	root /app/public
+	encode zstd gzip
+
+	# PUBLIC SITE ONLY.
+	#
+	# This deployment serves the four public pages and their static assets and
+	# nothing else. Authentication and the staff case-management area are not
+	# exposed here: confidential client records stay on the firm's own hosting.
+	# The allowlist is deliberate — anything not named below returns 404 before
+	# PHP is reached, so a routing mistake in the application cannot expose a
+	# private page from this deployment.
+	@public {
+		path / /services /about /contact
+		path /robots.txt /favicon.ico /favicon.svg /apple-touch-icon.png
+		path /images/*
+	}
+
+	handle @public {
+		php_server {
+			try_files {path} index.php
+		}
+	}
+
+	handle {
+		respond "Not found" 404
+	}
+}
