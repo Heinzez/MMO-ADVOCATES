@@ -1,11 +1,83 @@
 @extends('layouts.public')
+
 @php
     $publicTitle = data_get($publishedContent ?? [], 'title');
     $publicBody = data_get($publishedContent ?? [], 'body');
+    $phoneLink = 'tel:'.config('firm.phone_link');
+    $mapUrl = 'https://www.google.com/maps/search/?api=1&query='.urlencode(config('firm.map_query'));
 @endphp
+
 @section('title'){{ $publicTitle ?: 'Contact us' }}@endsection
-@section('description', 'Reach out to us by telephone or email, or find our Nairobi office.')
+@section('description', 'Call or email MMO Advocates LLP, or visit our office at Kimathi House, Suite 807, Kimathi Street, Nairobi, Kenya.')
+
 @section('content')
-<section class="page-intro"><div class="wrap intro-grid"><div><p class="eyebrow">Contact us</p><h1>{{ $publicTitle ?: 'Reach out to us.' }}</h1></div><p class="lead">{{ $publicBody ?: 'Call us, email us, or find us at our Nairobi office. Our contact details are below.' }}</p></div></section>
-<section class="section"><div class="wrap contact-grid"><dl class="contact-list"><div class="contact-row"><dt>Call us</dt><dd><a href="tel:+254725144472">0725 144 472 <span class="arrow" aria-hidden="true">↗</span></a></dd></div><div class="contact-row"><dt>Email us</dt><dd><a href="mailto:mmoadvocatellp@gmail.com">mmoadvocatellp@gmail.com</a></dd></div><div class="contact-row"><dt>Find us</dt><dd><address style="font-style:normal">Kimathi House, Suite 807, Kimathi Street,<br>P.O. Box 2046-00200, Nairobi, Kenya.</address></dd></div></dl><aside class="contact-aside"><p class="eyebrow" style="color:#f8c678">Our practice</p><h2>Start with a conversation.</h2><p>For enquiries about our services, reach out to us using the telephone number or email address on this page.</p><a class="text-link" href="/services">See what we provide <span aria-hidden="true">↗</span></a></aside></div></section>
+
+@include('public.partials.hero', [
+    'eyebrow' => 'Start a conversation',
+    'title' => $publicTitle ?: "Let's discuss",
+    'accent' => $publicTitle ? null : 'how we can help.',
+    'lead' => $publicBody ?: 'Reach out to our office directly by telephone or email. There is no online booking; we prefer to speak with you.',
+    'primaryLabel' => 'Call '.config('firm.phone_display'),
+    'primaryHref' => $phoneLink,
+    'secondaryLabel' => 'Email us instead',
+    'secondaryHref' => 'mailto:'.config('firm.email'),
+    'note' => 'We answer the telephone during office hours',
+])
+
+{{-- Contact details --}}
+<section class="section sec-cream">
+    <div class="wrap">
+        <p class="eyebrow">Call us</p>
+        <div class="split">
+            <div>
+                <h2>{{ config('firm.phone_display') }}</h2>
+                <p class="body-copy copy-top">The fastest way to reach us is by telephone during office hours. Tell us briefly what the matter concerns and we will direct you to the right person.</p>
+                <div class="actions-row">
+                    <a class="btn btn-navy" href="{{ $phoneLink }}">Call our office <span class="ar" aria-hidden="true">&#8599;</span></a>
+                    <a class="tlink" href="mailto:{{ config('firm.email') }}">Email us instead <span class="ar" aria-hidden="true">&rarr;</span></a>
+                </div>
+            </div>
+
+            <div class="details-col">
+                <dl class="details">
+                    <div class="detail">
+                        <dt>Phone</dt>
+                        <dd><a href="{{ $phoneLink }}">{{ config('firm.phone_display') }}</a></dd>
+                    </div>
+                    <div class="detail">
+                        <dt>Email</dt>
+                        <dd><a href="mailto:{{ config('firm.email') }}">{{ config('firm.email') }}</a></dd>
+                    </div>
+                    <div class="detail">
+                        <dt>Physical address</dt>
+                        <dd>
+                            <address>
+                                @foreach (config('firm.address_lines') as $line){{ $line }}<br>@endforeach
+                            </address>
+                        </dd>
+                    </div>
+                    <div class="detail">
+                        <dt>Postal address</dt>
+                        <dd><address>{{ config('firm.postal_address') }}</address></dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- Office --}}
+<section class="section sec-dark approach">
+    <div class="wrap">
+        <p class="eyebrow">Visit our office</p>
+        <div class="split">
+            <h2>Kimathi House, <span class="accent">Suite 807.</span></h2>
+            <div>
+                <p class="body-copy">Our office is on Kimathi Street in central Nairobi. Suite 807 is on the eighth floor of Kimathi House.</p>
+                <a class="tlink" href="{{ $mapUrl }}" target="_blank" rel="noopener noreferrer">Open Kimathi House in Maps <span class="ar" aria-hidden="true">&#8599;</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
 @endsection

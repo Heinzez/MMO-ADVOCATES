@@ -1,0 +1,63 @@
+# syntax=docker/dockerfile:1
+
+# ---------------------------------------------------------------------------
+# Public website image, built for Vercel's container runtime.
+#
+# This image serves ONLY the four public pages. Authentication and the staff
+# case-management area are refused by the Caddyfile allowlist, so no
+# confidential client record is reachable through this deployment.
+#
+# The base tag intentionally floats to the newest PHP 8.4 patch release so a
+# rebuild picks up PHP security fixes. Two critical PHP remote-code-execution
+# flaws were disclosed in October 2026 (CVE-2026-109618, CVE-2026-109619) and
+# are fixed only in the runtime, never in application code: rebuild and
+# redeploy whenever a PHP security release lands.
+# ---------------------------------------------------------------------------
+
+FROM dunglas/frankenphp:1-php8.4-bookworm AS base
+
+# pdo_mysql is included so the optional published-content lookup works if this
+# deployment is ever pointed at a database; the pages render without one.
+RUN install-php-extensions pdo_mysql intl zip opcache \
+    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+WORKDIR /app
+
+# --- Composer dependencies -------------------------------------------------
+FROM base AS vendor
+
+COPY --from=composer/composer:2-bin /composer /usr/bin/composer
+
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --no-autoloader
+
+# --- Runtime ---------------------------------------------------------------
+FROM base AS runtime
+
+# Vercel injects PORT. 8080 keeps the default unprivileged so the server needs
+# no capability to bind it. No database, cache or queue service is required:
+# the public pages hold their own copy and the site has no forms.
+ENV PORT=8080 \
+    APP_ENV=production \
+    APP_DEBUG=false \
+    LOG_CHANNEL=stderr \
+    SESSION_DRIVER=cookie \
+    CACHE_STORE=array \
+    QUEUE_CONNECTION=sync \
+    PUBLIC_CONTENT_OVERRIDES=false
+
+COPY --from=vendor /usr/bin/composer /usr/bin/composer
+COPY --from=vendor /app/vendor ./vendor
+COPY . .
+
+RUN composer dump-autoload --optimize --no-dev --no-interaction \
+    && cp Caddyfile /etc/caddy/Caddyfile \
+    && mkdir -p storage/framework/cache/data storage/framework/sessions \
+                storage/framework/views storage/logs bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+USER www-data
+
+EXPOSE 8080
+
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]

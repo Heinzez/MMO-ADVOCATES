@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\PublicContentItem;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class PublicPageContentTest extends TestCase
@@ -14,7 +15,7 @@ class PublicPageContentTest extends TestCase
     public function test_public_routes_render_their_view_and_keep_static_fallbacks_without_publications(): void
     {
         $pages = [
-            '/' => ['public.home', 'Legal services'],
+            '/' => ['public.home', 'Clarity in counsel'],
             '/services' => ['public.services', 'Conveyancing'],
             '/about' => ['public.about', 'MMO Advocates LLP'],
             '/contact' => ['public.contact', '0725 144 472'],
@@ -91,6 +92,38 @@ class PublicPageContentTest extends TestCase
             ->assertDontSee('Draft only title')
             ->assertDontSee('Draft only body')
             ->assertDontSee('draft-editor@example.test');
+    }
+
+    public function test_public_pages_render_static_copy_when_the_content_table_is_unavailable(): void
+    {
+        Schema::drop('public_content_items');
+
+        $pages = [
+            '/' => 'Clarity in counsel.',
+            '/services' => 'Conveyancing',
+            '/about' => 'MMO Advocates LLP',
+            '/contact' => '0725 144 472',
+        ];
+
+        foreach ($pages as $path => $copy) {
+            $this->get($path)
+                ->assertOk()
+                ->assertViewHas('publishedContent', null)
+                ->assertSee($copy);
+        }
+    }
+
+    public function test_published_content_is_not_applied_when_overrides_are_disabled(): void
+    {
+        config(['firm.content_overrides' => false]);
+        $this->publish('home', 'Home title', 'Home body', User::factory()->create());
+
+        $this->get('/')
+            ->assertOk()
+            ->assertViewHas('publishedContent', null)
+            ->assertDontSee('Home title')
+            ->assertDontSee('Home body')
+            ->assertSee('Clarity in counsel.');
     }
 
     private function publish(string $slug, string $title, string $body, User $editor): void
