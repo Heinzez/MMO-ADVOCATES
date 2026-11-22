@@ -14,7 +14,7 @@ class PublicPageContentTest extends TestCase
     public function test_public_routes_render_their_view_and_keep_static_fallbacks_without_publications(): void
     {
         $pages = [
-            '/' => ['public.home', 'Legal services'],
+            '/' => ['public.home', 'Clarity in counsel'],
             '/services' => ['public.services', 'Conveyancing'],
             '/about' => ['public.about', 'MMO Advocates LLP'],
             '/contact' => ['public.contact', '0725 144 472'],

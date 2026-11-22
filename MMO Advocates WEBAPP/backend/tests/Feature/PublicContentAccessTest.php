@@ -73,7 +73,7 @@ class PublicContentAccessTest extends TestCase
 
     public function test_public_blade_pages_render_without_private_data(): void
     {
-        $this->get('/')->assertOk()->assertViewIs('public.home')->assertSee('Legal services');
+        $this->get('/')->assertOk()->assertViewIs('public.home')->assertSee('Clarity in counsel');
         $this->get('/services')->assertOk()->assertViewIs('public.services')->assertSee('Conveyancing');
         $this->get('/about')->assertOk()->assertViewIs('public.about')->assertSee('MMO Advocates LLP');
         $this->get('/contact')->assertOk()->assertViewIs('public.contact')->assertSee('0725 144 472');
